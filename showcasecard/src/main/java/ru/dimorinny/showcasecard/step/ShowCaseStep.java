@@ -2,10 +2,14 @@ package ru.dimorinny.showcasecard.step;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 
 import ru.dimorinny.showcasecard.position.ShowCasePosition;
 import ru.dimorinny.showcasecard.position.ViewPosition;
+import ru.dimorinny.showcasecard.radius.Radius;
+import ru.dimorinny.showcasecard.radius.ShowCaseRadius;
+import ru.dimorinny.showcasecard.radius.ViewRadius;
 
 /**
  * One tip object, to be shown as a help tip on the screen.
@@ -27,9 +31,13 @@ public class ShowCaseStep {
      * @param viewToShowCase showcase will point to this view
      * @param message        message to show
      */
-    public ShowCaseStep(@NonNull View viewToShowCase, String message) {
+
+    private ViewRadius viewRadius ;
+
+    public ShowCaseStep(@NonNull final View viewToShowCase, String message) {
         position = new ViewPosition(viewToShowCase);
         this.message = message;
+        this.viewRadius = new ViewRadius(viewToShowCase) ;
     }
 
     /**
@@ -72,5 +80,9 @@ public class ShowCaseStep {
 
     public String getMessage() {
         return message;
+    }
+
+    public float getRadius() {
+        return viewRadius.getRadius();
     }
 }

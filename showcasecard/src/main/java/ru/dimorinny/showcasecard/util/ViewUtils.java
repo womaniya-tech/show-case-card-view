@@ -14,6 +14,13 @@ public class ViewUtils {
         return Math.round(dp * (metrics.densityDpi / 160.0f));
     }
 
+    public static int convertPxToDp(View view, int px) {
+        Resources resources = view.getContext().getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        float dp = px / ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        return Math.round(dp);
+    }
+
     public static PointF getAbsoluteCenterPosition(View view) {
         int[] positions = new int[2];
         view.getLocationOnScreen(positions);

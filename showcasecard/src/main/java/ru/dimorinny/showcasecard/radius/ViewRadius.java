@@ -18,6 +18,8 @@ public class ViewRadius implements ShowCaseRadius {
 
     @Override
     public float getRadius() {
+        int a = view.getHeight() ;
+        int b = view.getWidth() ;
         return Math.max(view.getHeight(), view.getWidth()) * rate;
     }
 

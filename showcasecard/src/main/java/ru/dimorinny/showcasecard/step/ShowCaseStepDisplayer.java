@@ -155,8 +155,8 @@ public class ShowCaseStepDisplayer {
         final int myTipIndex = currentlyDisplayedTipIndex;
         showCaseView = new ShowCaseView.Builder(context)
                 .withTypedPosition(item.getPosition())
-                .withTypedRadius(new Radius(showCaseRadius))
                 .dismissOnTouch(false)
+                .withTypedRadius(new Radius(item.getRadius()))
                 .withTouchListener(new ShowCaseView.TouchListener() {
                     @Override
                     public void onTouchEvent() {

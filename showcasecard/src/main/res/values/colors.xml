@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black20">#80000000</color>
-    <color name="dark">#333333</color>
+    <color name="white">#fff</color>
+    <color name="card_color">#4286f5</color>
 </resources>
