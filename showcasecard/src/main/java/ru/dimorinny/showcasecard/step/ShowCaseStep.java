@@ -25,6 +25,9 @@ public class ShowCaseStep {
      */
     private String message;
 
+
+    private int imgResId;
+
     /**
      * A simple step item pointing to the position of viewToShowCase on the screen.
      *
@@ -40,6 +43,12 @@ public class ShowCaseStep {
         this.viewRadius = new ViewRadius(viewToShowCase) ;
     }
 
+    public ShowCaseStep(@NonNull final View viewToShowCase, int imgResId) {
+        position = new ViewPosition(viewToShowCase);
+        this.imgResId = imgResId;
+        this.viewRadius = new ViewRadius(viewToShowCase) ;
+    }
+
     /**
      * A simple step item pointing to a position on the screen.
      *
@@ -49,6 +58,11 @@ public class ShowCaseStep {
     public ShowCaseStep(ShowCasePosition position, String message) {
         this.position = position;
         this.message = message;
+    }
+
+    public ShowCaseStep(ShowCasePosition position, int imgResId) {
+        this.position = position;
+        this.imgResId = imgResId;
     }
 
     /**
@@ -71,6 +85,17 @@ public class ShowCaseStep {
         this.message = message;
     }
 
+    public ShowCaseStep(@Nullable View viewToShowCase,
+                        ShowCasePosition fallbackPosition, int imgResId) {
+
+        if (viewToShowCase == null) {
+            position = fallbackPosition;
+        } else {
+            position = new ViewPosition(viewToShowCase);
+        }
+        this.imgResId = imgResId;
+    }
+
     /**
      * @return the position this item will point to when activated.
      */
@@ -80,6 +105,10 @@ public class ShowCaseStep {
 
     public String getMessage() {
         return message;
+    }
+
+    public int getImgResId() {
+        return imgResId;
     }
 
     public float getRadius() {

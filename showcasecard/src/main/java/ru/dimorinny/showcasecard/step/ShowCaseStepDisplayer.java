@@ -153,20 +153,39 @@ public class ShowCaseStepDisplayer {
         }
 
         final int myTipIndex = currentlyDisplayedTipIndex;
-        showCaseView = new ShowCaseView.Builder(context)
-                .withTypedPosition(item.getPosition())
-                .dismissOnTouch(false)
-                .withTypedRadius(new Radius(item.getRadius()))
-                .withTouchListener(new ShowCaseView.TouchListener() {
-                    @Override
-                    public void onTouchEvent() {
-                        if (myTipIndex == currentlyDisplayedTipIndex) {
-                            tryShowNextTip();
+        if(item.getMessage()!=null){
+            showCaseView = new ShowCaseView.Builder(context)
+                    .withTypedPosition(item.getPosition())
+                    .dismissOnTouch(false)
+                    .withTypedRadius(new Radius(item.getRadius()))
+                    .withTouchListener(new ShowCaseView.TouchListener() {
+                        @Override
+                        public void onTouchEvent() {
+                            if (myTipIndex == currentlyDisplayedTipIndex) {
+                                tryShowNextTip();
+                            }
                         }
-                    }
-                })
-                .withContent(item.getMessage())
-                .build();
+                    })
+                    .withContent(item.getMessage())
+                    .build();
+        }
+        else{
+            showCaseView = new ShowCaseView.Builder(context)
+                    .withTypedPosition(item.getPosition())
+                    .dismissOnTouch(false)
+                    .withTypedRadius(new Radius(item.getRadius()))
+                    .withTouchListener(new ShowCaseView.TouchListener() {
+                        @Override
+                        public void onTouchEvent() {
+                            if (myTipIndex == currentlyDisplayedTipIndex) {
+                                tryShowNextTip();
+                            }
+                        }
+                    })
+                    .withContent(item.getImgResId())
+                    .build();
+        }
+
 
         if (activity == null) {
             showCaseView.show(fragment);

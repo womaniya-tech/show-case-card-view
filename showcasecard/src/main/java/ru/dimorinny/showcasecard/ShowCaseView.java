@@ -28,6 +28,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -44,7 +46,7 @@ import ru.dimorinny.showcasecard.util.MeasuredUtils;
 import ru.dimorinny.showcasecard.util.NavigationBarUtils;
 import ru.dimorinny.showcasecard.util.ViewUtils;
 
-public class ShowCaseView extends FrameLayout {
+public class ShowCaseView extends RelativeLayout {
 
     private static final float MAX_CARD_WIDTH = 0.9F;
     private static final String CARD_ANIMATION_PROPERTY = "translationY";
@@ -74,7 +76,10 @@ public class ShowCaseView extends FrameLayout {
     private int cardRightOffset = 0;
     private int cardLeftOffset = 0;
 
-    private TextView cardContent;
+    private TextView cardContentTextView;
+    private ImageView cardContentImageView;
+
+    private ImageView cardImage;
 
     private CardView cardView;
 
@@ -107,15 +112,22 @@ public class ShowCaseView extends FrameLayout {
         circlePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
     }
 
-    private void setContent(TextView contentView, String text) {
-        cardContent = contentView;
-        cardContent.setText(text);
-    }
+//    private void setContent(TextView contentView, String text) {
+//        cardContent = contentView;
+//        cardContent.setText(text);
+//    }
+
 
     //
     private void setContent(CardView cardView, TextView contentView, String text) {
-        cardContent = contentView;
-        cardContent.setText(text);
+        cardContentTextView = contentView;
+        cardContentTextView.setText(text);
+        this.cardView = cardView;
+    }
+
+    private void setContent(CardView cardView, ImageView contentView, int imgResId) {
+        cardContentImageView = contentView;
+        cardContentImageView.setImageResource(imgResId);
         this.cardView = cardView;
     }
 
@@ -154,38 +166,70 @@ public class ShowCaseView extends FrameLayout {
         return Math.abs(position.x - getWidth() / 2.0) / getWidth();
     }
 
-    private int getCardMarginTop() {
+//    private int getCardMarginTop() {
+//
+//        if (position.y + radius < CARD_MIN_MARGIN) {
+//            return (int) CARD_MIN_MARGIN;
+//        } else {
+//            return (int) (position.y + radius + CARD_MIN_MARGIN);
+//        }
+//    }
 
-        if (position.y + radius < CARD_MIN_MARGIN) {
-            return (int) CARD_MIN_MARGIN;
-        } else {
-            return (int) (position.y + radius + CARD_MIN_MARGIN);
-        }
+    private int getCardMarginTop() {
+        return (int)CARD_MIN_MARGIN;
     }
+
+
+
+    private int getCardMarginLeft() {
+        return (int)CARD_MIN_MARGIN;
+    }
+
+    private int getCardMarginRight() {
+        return (int)CARD_MIN_MARGIN;
+    }
+
+
 
     private void configureCard(ViewGroup card) {
-        cardContent.setMaxWidth(getCardWidth());
-        cardContent.setPadding(
-                CARD_PADDING_VERTICAL,
-                CARD_PADDING_HORIZONTAL,
-                CARD_PADDING_VERTICAL,
-                CARD_PADDING_HORIZONTAL
-        );
-        cardContent.setLayoutParams(new FrameLayout.LayoutParams(
-                LayoutParams.MATCH_PARENT,
-                LayoutParams.WRAP_CONTENT
-        ));
-        cardContent.setGravity(Gravity.CENTER);
+        if(cardContentTextView!=null){
+            cardContentTextView.setMaxWidth(getCardWidth());
+            cardContentTextView.setPadding(
+                    CARD_PADDING_VERTICAL,
+                    CARD_PADDING_HORIZONTAL,
+                    CARD_PADDING_VERTICAL,
+                    CARD_PADDING_HORIZONTAL
+            );
+            cardContentTextView.setLayoutParams(new FrameLayout.LayoutParams(
+                    LayoutParams.MATCH_PARENT,
+                    LayoutParams.WRAP_CONTENT
+            ));
+            cardContentTextView.setGravity(Gravity.CENTER);
+        }
+        else if (cardContentImageView != null){
+            //cardContentImageView.setMaxWidth(getCardWidth());
 
-        FrameLayout.LayoutParams cardLayoutParams = generateDefaultLayoutParams();
-        cardLayoutParams.width = LayoutParams.MATCH_PARENT;
-        cardLayoutParams.height = LayoutParams.WRAP_CONTENT;
-        cardLayoutParams.topMargin = getCardMarginTop();
-        cardLayoutParams.rightMargin = (int) CARD_MIN_MARGIN;
-        cardLayoutParams.leftMargin = (int) CARD_MIN_MARGIN;
+            cardContentImageView.setLayoutParams(new FrameLayout.LayoutParams(
+                    LayoutParams.WRAP_CONTENT,
+                    LayoutParams.WRAP_CONTENT
+            ));
+            //cardContentImageView.setGravity(Gravity.CENTER);
+        }
+
+
+        RelativeLayout.LayoutParams cardLayoutParams = (RelativeLayout.LayoutParams)generateDefaultLayoutParams();
+        cardLayoutParams.width = 900;
+        cardLayoutParams.height = 900;
+        cardLayoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        //cardLayoutParams.topMargin = getCardMarginTop();
+//        cardLayoutParams.rightMargin = (int) CARD_MIN_MARGIN;
+//        cardLayoutParams.leftMargin = (int) CARD_MIN_MARGIN;
         cardLayoutParams.bottomMargin = (int) CARD_MIN_MARGIN;
+
         card.setLayoutParams(cardLayoutParams);
     }
+
+
 
     private void showAfterMeasured(
             final Activity activity,
@@ -371,8 +415,10 @@ public class ShowCaseView extends FrameLayout {
         @ColorRes
         private int color = R.color.black20;
         private ShowCaseRadius radius = new Radius(128F);
-        private TextView contentView;
+        private TextView contentViewText;
+        private ImageView contentViewImage;
         private String contentText;
+        private int contentResId;
         private boolean dismissOnTouch = true;
         @Nullable
         private TouchListener touchListener;
@@ -425,8 +471,21 @@ public class ShowCaseView extends FrameLayout {
                     null
             );
 
-            this.contentView = cardView.findViewById(R.id.showcase_text);
+            this.contentViewText = cardView.findViewById(R.id.showcase_text);
             this.contentText = cardText;
+
+            return this;
+        }
+
+        @SuppressLint("InflateParams")
+        public Builder withContent(int imageResId) {
+            cardView = (CardView) LayoutInflater.from(context).inflate(
+                    R.layout.item_show_case_content_image,
+                    null
+            );
+
+            this.contentViewImage = cardView.findViewById(R.id.showcase_image);
+            this.contentResId = imageResId;
 
             return this;
         }
@@ -440,8 +499,11 @@ public class ShowCaseView extends FrameLayout {
             view.touchListener = this.touchListener;
             view.overlayPaint.setColor(ContextCompat.getColor(context, this.color));
 
-            if (this.contentView != null && contentText != null) {
-                view.setContent(this.cardView, this.contentView, this.contentText);
+            if (this.contentViewText != null && contentText != null) {
+                view.setContent(this.cardView, this.contentViewText, this.contentText);
+            }
+            else if (this.contentViewImage != null && contentResId != 0) {
+                view.setContent(this.cardView, this.contentViewImage, this.contentResId);
             }
 
             return view;

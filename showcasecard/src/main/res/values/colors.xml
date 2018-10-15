@@ -2,5 +2,6 @@
 <resources>
     <color name="black20">#80000000</color>
     <color name="white">#fff</color>
+    <color name="transparent">#00ffffff</color>
     <color name="card_color">#4286f5</color>
 </resources>
